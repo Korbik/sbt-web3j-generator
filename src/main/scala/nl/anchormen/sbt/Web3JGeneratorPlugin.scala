@@ -22,9 +22,11 @@ object Web3JGeneratorPlugin extends AutoPlugin {
 	import autoImport._
 
 	lazy val baseSettings: Seq[Setting[_]] = Seq(
-		outputPath := baseDirectory.value / "src" / "java",
+		//outputPath := baseDirectory.value / "src" / "java",
 		packageName := s"${organization.value}.web3j.generated",
-		smartContracts := baseDirectory.value / "src" / "contracts",
+		//smartContracts := baseDirectory.value / "src" / "contracts",
+		outputPath := baseDirectory.value / "app",
+		smartContracts := baseDirectory.value / "abi",
 		useJavaNativeTypes := true,
 		generateWrapper := Generate(outputPath.value, packageName.value, smartContracts.value, useJavaNativeTypes.value)
 	)
@@ -44,41 +46,39 @@ object Generate {
 	  *                           set to false
 	  */
 	def apply(outputPath: File, packageName: String, smartContracts: File, useJavaNativeTypes: Boolean): Unit = {
-		val outputDir: File = getPackagePath(outputPath, packageName)
-		val contractFiles: Map[String, Seq[File]] = groupAndFilterContractFiles(smartContracts)
+		import scala.collection.JavaConverters._
 
-		Log.debug(s"Output directory is ${outputDir.getAbsoluteFile}")
+//		val outputDir: File = getPackagePath(outputPath, packageName)
+		val contractFiles = AbiBin.findList(smartContracts).asScala.toList
+
+		Log.debug(s"Output directory is ${outputPath.getAbsoluteFile}")
 		Log.debug(s"Processing contract files:")
-		Log.debug(s"${contractFiles.values.mkString(", ")}")
+		Log.debug(s"${contractFiles.mkString(", ")}")
 
-		process(outputDir, packageName, contractFiles)
+		process(outputPath, packageName, contractFiles)
 	}
 
-	def process(outputDir: File, packageName: String, contractFiles: Map[String, Seq[File]]): Unit = {
+	def process(outputDir: File, packageName: String, contractFiles: List[AbiBin]): Unit = {
 		val thread: Thread = new Thread(
 			() => {
 				Log.debug("Processing contract files")
 
-				for (values <- contractFiles.values) {
-					val binaryFile = getBinaryFile(values)
-					val absFile = getAbsFile(values)
+				for (contract <- contractFiles) {
+//						Log.debug(s"Processing ${binaryFile.get.getName}, ${absFile.get.getName}")
 
-					if (binaryFile.isDefined && absFile.isDefined) {
-						Log.debug(s"Processing ${binaryFile.get.getName}, ${absFile.get.getName}")
-
-						val arguments: Seq[String] = getArguments(binaryFile.get.getAbsolutePath,
-							absFile.get.getAbsolutePath,
+						val arguments: Seq[String] = getArguments(
+							contract.bin.toFile.getAbsolutePath,
+							contract.abi.toFile.getAbsolutePath,
 							outputDir.getAbsolutePath,
-							packageName)
+							contract.packageName
+						)
 
 						try {
 							SolidityFunctionWrapperGenerator.run(arguments.toArray)
 						} catch {
 							case e: Exception => Log.error(e.getMessage)
 						}
-					} else {
-						Log.warn("Binary file or ABI file undefined")
-					}
+
 				}
 
 				Log.debug("Finished processing contract files")
