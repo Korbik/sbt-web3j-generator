@@ -1,11 +1,14 @@
 name := "sbt-web3j-generator"
 
+val slfVersion = "1.7.25"
+
 lazy val bintraySettings = Seq(
 	bintrayOrganization in ThisBuild := Some("anchormen"),
 	bintrayReleaseOnPublish in ThisBuild := false
 )
 
 lazy val commonDependencies = Seq(
+	libraryDependencies += "org.slf4j" % "slf4j-api" % slfVersion,
 	libraryDependencies += "org.web3j" % "codegen" % "3.2.0"
 )
 

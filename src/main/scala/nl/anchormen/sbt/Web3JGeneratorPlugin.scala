@@ -1,5 +1,7 @@
 package nl.anchormen.sbt
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.web3j.codegen.SolidityFunctionWrapperGenerator
 import sbt.Keys._
 import sbt.plugins.JvmPlugin
@@ -31,6 +33,7 @@ object Web3JGeneratorPlugin extends AutoPlugin {
 }
 
 object Generate {
+	val Log: Logger = LoggerFactory.getLogger("Web3JGeneratorPlugin")
 	/**
 	  * Generate Java classes from smart contract files
 	  *
@@ -43,29 +46,47 @@ object Generate {
 	def apply(outputPath: File, packageName: String, smartContracts: File, useJavaNativeTypes: Boolean): Unit = {
 		val outputDir: File = getPackagePath(outputPath, packageName)
 		val contractFiles: Map[String, Seq[File]] = groupAndFilterContractFiles(smartContracts)
+
+		Log.debug(s"Output directory is ${outputDir.getAbsoluteFile}")
+		Log.debug(s"Processing contract files:")
+		Log.debug(s"${contractFiles.values.mkString(", ")}")
+
 		process(outputDir, packageName, contractFiles)
 	}
 
 	def process(outputDir: File, packageName: String, contractFiles: Map[String, Seq[File]]): Unit = {
 		val thread: Thread = new Thread(
 			() => {
+				Log.debug("Processing contract files")
+
 				for (values <- contractFiles.values) {
 					val binaryFile = getBinaryFile(values)
 					val absFile = getAbsFile(values)
 
 					if (binaryFile.isDefined && absFile.isDefined) {
+						Log.debug(s"Processing ${binaryFile.get.getName}, ${absFile.get.getName}")
+
 						val arguments: Seq[String] = getArguments(binaryFile.get.getAbsolutePath,
 							absFile.get.getAbsolutePath,
 							outputDir.getAbsolutePath,
 							packageName)
 
-						SolidityFunctionWrapperGenerator.run (arguments.toArray)
+						try {
+							SolidityFunctionWrapperGenerator.run(arguments.toArray)
+						} catch {
+							case e: Exception => Log.error(e.getMessage)
+						}
+					} else {
+						Log.warn("Binary file or ABI file undefined")
 					}
 				}
+
+				Log.debug("Finished processing contract files")
 			}
 		)
 
 		thread.start()
+		thread.join()
 	}
 
 	/**
@@ -156,11 +177,11 @@ object Generate {
 	  *
 	  * @param binaryPath
 	  * @param absPath
-	  * @param outputPath
+	  * @param outputDir
 	  * @param packageName
 	  * @return
 	  */
-	private def getArguments(binaryPath: String, absPath: String, outputPath: String, packageName: String): Seq[String] = {
-		Seq("generate", binaryPath, absPath, "-o", outputPath, "-p", packageName)
+	private def getArguments(binaryPath: String, absPath: String, outputDir: String, packageName: String): Seq[String] = {
+		Seq("generate", binaryPath, absPath, "-o", outputDir, "-p", packageName)
 	}
 }
