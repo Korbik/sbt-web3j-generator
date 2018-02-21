@@ -1,12 +1,11 @@
 package nl.anchormen.sbt
 
-import java.io.{BufferedReader, IOException, InputStreamReader}
-
+import org.web3j.codegen.SolidityFunctionWrapperGenerator
 import sbt.Keys._
 import sbt.plugins.JvmPlugin
 import sbt.{AutoPlugin, PluginTrigger, _}
 
-object Web3JSolidityPlugin extends AutoPlugin {
+object Web3JGeneratorPlugin extends AutoPlugin {
 	override def requires: JvmPlugin.type = plugins.JvmPlugin
 	override def trigger: PluginTrigger = allRequirements
 
@@ -44,35 +43,29 @@ object Generate {
 	def apply(outputPath: File, packageName: String, smartContracts: File, useJavaNativeTypes: Boolean): Unit = {
 		val outputDir: File = getPackagePath(outputPath, packageName)
 		val contractFiles: Map[String, Seq[File]] = groupAndFilterContractFiles(smartContracts)
-
-		for (values <- contractFiles.values) {
-			val arguments: Seq[String] = getArguments(binaryPath = values.head.absolutePath,
-				absPath = values.last.absolutePath,
-				outputDir.getAbsolutePath,
-				packageName)
-
-			process(arguments, smartContracts)
-		}
+		process(outputDir, packageName, contractFiles)
 	}
 
-	def process(arguments: Seq[String], smartContracts: File): Unit = {
-		import scala.collection.JavaConverters._
-		val builder = new ProcessBuilder(arguments.toList.asJava)
-		builder.directory(smartContracts)
+	def process(outputDir: File, packageName: String, contractFiles: Map[String, Seq[File]]): Unit = {
+		val thread: Thread = new Thread(
+			() => {
+				for (values <- contractFiles.values) {
+					val binaryFile = getBinaryFile(values)
+					val absFile = getAbsFile(values)
 
-		val process = builder.start
-		val is = process.getInputStream
-		val isr = new InputStreamReader(is)
-		val br = new BufferedReader(isr)
-		var line: String = null
+					if (binaryFile.isDefined && absFile.isDefined) {
+						val arguments: Seq[String] = getArguments(binaryFile.get.getAbsolutePath,
+							absFile.get.getAbsolutePath,
+							outputDir.getAbsolutePath,
+							packageName)
 
-		try {
-			while ({line = br.readLine; line != null}) {
-				System.out.println(line)
+						SolidityFunctionWrapperGenerator.run (arguments.toArray)
+					}
+				}
 			}
-		} catch {
-			case e: IOException => System.out.println(e.getMessage)
-		}
+		)
+
+		thread.start()
 	}
 
 	/**
@@ -82,7 +75,7 @@ object Generate {
 	  * @return
 	  */
 	private def groupAndFilterContractFiles(smartContracts: File): Map[String, Seq[File]] = {
-		val files: Seq[File] = getContractFiles(smartContracts)
+		val files: Seq[File] = findContractFiles(smartContracts)
 		val fileNames: Seq[(String, File)] = filterContractFileNames(files)
 
 		fileNames.groupBy(_._1)
@@ -99,18 +92,33 @@ object Generate {
 				.foldLeft(basePath)((a: File, b: String) => a / b)
 	}
 
-	private def getBinaryFiles(contractPath: File): Seq[File] = {
+	private def findBinaryFiles(contractPath: File): Seq[File] = {
 		val finder: PathFinder = contractPath ** "*.bin"
 		finder.get
 	}
 
-	private def getAbsFiles(contractPath: File): Seq[File] = {
+	private def getBinaryFile(contractFiles: Seq[File]): Option[File] = {
+		contractFiles.find(file => hasFileExtension(file, "bin"))
+	}
+
+	private def getAbsFile(contractFiles: Seq[File]): Option[File] = {
+		contractFiles.find(file => hasFileExtension(file, "abi"))
+	}
+
+	private def hasFileExtension(file: File, extension: String): Boolean = {
+		getFileExtension(file) match {
+			case Some(`extension`) => true
+			case _ => false
+		}
+	}
+
+	private def findAbsFiles(contractPath: File): Seq[File] = {
 		val finder: PathFinder = contractPath ** "*.abi"
 		finder.get
 	}
 
-	private def getContractFiles(contractPath: File): Seq[File] = {
-		getBinaryFiles(contractPath) ++ getAbsFiles(contractPath)
+	private def findContractFiles(contractPath: File): Seq[File] = {
+		findBinaryFiles(contractPath) ++ findAbsFiles(contractPath)
 	}
 
 	/**
@@ -129,10 +137,18 @@ object Generate {
 	}
 
 	private def getFileName(file: File): Option[String] = {
+		val filename = file.getName
+				.split(".")
+				.dropRight(1)
+	        	.mkString(".")
+
+		Option(filename)
+	}
+
+	private def getFileExtension(file: File): Option[String] = {
 		file.getName
 				.split(".")
-				.drop(1)
-	        	.lastOption
+				.lastOption
 	}
 
 	/**
@@ -145,6 +161,6 @@ object Generate {
 	  * @return
 	  */
 	private def getArguments(binaryPath: String, absPath: String, outputPath: String, packageName: String): Seq[String] = {
-		Seq("org.web3j.codegen.SolidityFunctionWrapperGenerator", binaryPath, absPath, "-o", outputPath, "-p", packageName)
+		Seq("generate", binaryPath, absPath, "-o", outputPath, "-p", packageName)
 	}
 }

@@ -39,16 +39,23 @@ lazy val repoSettings = Seq(
 )
 
 lazy val sbtSettings = Seq(
-	crossSbtVersions := Seq("0.13.17", "1.1.1"),
-	sbtVersion in Global := "1.1.1"
+//	crossSbtVersions := Seq("0.13.17", "1.1.1")
+	sbtVersion := "1.1.1"
+//	sbtVersion in Global := "1.1.1"
 )
 
 lazy val scalaSettings = Seq(
-	scalaCompilerBridgeSource := {
-		val sv = appConfiguration.value.provider.id.version
-		("org.scala-sbt" % "compiler-interface" % sv % "component").sources
-	},
 	scalaVersion := "2.12.4"
+//	crossScalaVersions := Seq("2.11.11", "2.12.4"),
+//	scalaCompilerBridgeSource := {
+//		val sv = appConfiguration.value.provider.id.version
+//		("org.scala-sbt" % "compiler-interface" % sv % "component").sources
+//	}
+//	scalaVersion := (CrossVersion partialVersion (sbtVersion in pluginCrossBuild).value match {
+//		case Some((0, 13)) => "2.11.11"
+//		case Some((1, _))  => "2.12.4"
+//		case _             => sys error s"Unhandled sbt version ${(sbtVersion in pluginCrossBuild).value}"
+//	})
 )
 
 lazy val testSettings = Seq(
