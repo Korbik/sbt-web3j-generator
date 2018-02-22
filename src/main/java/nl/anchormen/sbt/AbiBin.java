@@ -73,6 +73,14 @@ public class AbiBin
         return sb.toString();
     }
 
+    public File newLocation(File out)
+    {
+        return out.toPath()
+                .resolve(relativePath())
+                .resolve(name + ".java")
+                .toFile();
+    }
+
 
     public boolean isValid()
     {
