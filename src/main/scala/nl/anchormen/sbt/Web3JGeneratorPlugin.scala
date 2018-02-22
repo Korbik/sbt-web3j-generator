@@ -17,10 +17,10 @@ object Web3JGeneratorPlugin extends AutoPlugin {
   override def trigger: PluginTrigger = allRequirements
 
   object autoImport {
-    val web3jGenerateWrapper = TaskKey[Unit]("web3j-generate-wrapper", "Generate Java wrapper classes")
-    val web3jOutputPath = SettingKey[File]("web3j-output-path", "The directory to output the generated classes")
-    val web3jContractsPath = SettingKey[File]("web3j-contract-path", "The directory containing the smart contracts")
-    val web3jUseJavaNativeTypes = SettingKey[Boolean]("web3j-use-java-native-type", "Use Java native types or Solidity types")
+    val web3jGenerateWrapper = taskKey[Unit]( "Generate Java wrapper classes")
+    val web3jOutputPath = settingKey[File]( "The directory to output the generated classes")
+    val web3jContractsPath = settingKey[File]( "The directory containing the smart contracts")
+    val web3jUseJavaNativeTypes = settingKey[Boolean]( "Use Java native types or Solidity types")
   }
 
   import autoImport._
@@ -63,12 +63,6 @@ object Web3JGenerate {
     val files = ListBuffer[File]()
     val generator = new SolidityFunctionWrapper(useJavaNativeTypes)
     for (contract <- contractFiles) {
-      val arguments: Seq[String] = getArguments(
-        contract.bin.toFile.getAbsolutePath,
-        contract.abi.toFile.getAbsolutePath,
-        outputDir.getAbsolutePath,
-        contract.packageName
-      )
       val bin = new String(java.nio.file.Files.readAllBytes(contract.bin), StandardCharsets.UTF_8)
       val abi = new String(java.nio.file.Files.readAllBytes(contract.abi), StandardCharsets.UTF_8)
       try {
@@ -87,17 +81,4 @@ object Web3JGenerate {
     return files.toList
   }
 
-
-  /**
-    * org.web3j.codegen.SolidityFunctionWrapperGenerator /path/to/<smart-contract>.bin /path/to/<smart-contract>.abi -o /path/to/src/main/java -p com.your.organisation.name
-    *
-    * @param binaryPath
-    * @param absPath
-    * @param outputDir
-    * @param packageName
-    * @return
-    */
-  private def getArguments(binaryPath: String, absPath: String, outputDir: String, packageName: String): Seq[String] = {
-    Seq("generate", binaryPath, absPath, "-o", outputDir, "-p", packageName)
-  }
 }
