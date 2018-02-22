@@ -20,14 +20,14 @@ object Web3JGeneratorPlugin extends AutoPlugin {
     val web3jGenerateWrapper = TaskKey[Unit]("web3j-generate-wrapper", "Generate Java wrapper classes")
     val web3jOutputPath = SettingKey[File]("web3j-output-path", "The directory to output the generated classes")
     val web3jContractsPath = SettingKey[File]("web3j-contract-path", "The directory containing the smart contracts")
-    val web3jUseJavaNativeTypes = SettingKey[Boolean]("use-java-native-type", "Use Java native types or Solidity types")
+    val web3jUseJavaNativeTypes = SettingKey[Boolean]("web3j-use-java-native-type", "Use Java native types or Solidity types")
   }
 
   import autoImport._
 
   lazy val pluginSettings: Seq[Setting[_]] = Seq(
-    web3jOutputPath := baseDirectory.value / "src",
-    web3jContractsPath := baseDirectory.value / "abi",
+    web3jOutputPath := baseDirectory.value / "src" / "java",
+    web3jContractsPath := baseDirectory.value / "src" / "abi",
     web3jUseJavaNativeTypes := true
   )
 
@@ -59,7 +59,7 @@ object Web3JGenerate {
     process(contractFiles, useJavaNativeTypes, outputPath)
   }
 
-  def process(contractFiles: List[AbiBin],useJavaNativeTypes: Boolean, outputDir: File): Seq[File] = {
+  def process(contractFiles: List[AbiBin], useJavaNativeTypes: Boolean, outputDir: File): Seq[File] = {
     val files = ListBuffer[File]()
     val generator = new SolidityFunctionWrapper(useJavaNativeTypes)
     for (contract <- contractFiles) {
