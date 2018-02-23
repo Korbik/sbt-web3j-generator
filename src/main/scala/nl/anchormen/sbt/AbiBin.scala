@@ -57,7 +57,7 @@ class AbiBin(val name: String, val abiBinPath: Path, val searchBase: Path) {
 	def basePath: Path = _basePath
 	def bin: Path = _bin
 
-	def packageName: String = {
+	lazy val packageName: String = {
 		val pathNames = for (i <- 0 until relativePath.getNameCount) yield relativePath.getName(i)
 		pathNames.mkString(".")
 	}
@@ -66,20 +66,13 @@ class AbiBin(val name: String, val abiBinPath: Path, val searchBase: Path) {
 
 	def newLocation(out: File): File = out.toPath.resolve(relativePath).resolve(name + ".java").toFile
 
-	private val relativePath = {
+	private lazy val relativePath: Path = {
 		val path = searchBase.relativize(_basePath)
 		val initialPathName = searchBase.getName(searchBase.getNameCount - 1)
 
-		println("Path: " + path.toString)
-		println("Search base: " + searchBase.toAbsolutePath.toString)
-		println("Base path: " + _basePath.toAbsolutePath.toString)
-		println("Same file: " + Files.isSameFile(searchBase.toAbsolutePath, _basePath.toAbsolutePath))
-
 		if (Files.isSameFile(searchBase.toAbsolutePath, _basePath.toAbsolutePath)) {
-			println("Result: " + initialPathName.toString)
 			initialPathName
 		} else {
-			println("Result: " + initialPathName.resolve(path).toString)
 			initialPathName.resolve(path)
 		}
 	}
