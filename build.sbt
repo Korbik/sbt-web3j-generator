@@ -1,26 +1,11 @@
-import scala.util.Try
-
 name := "sbt-web3j-generator"
 
-val gitBranch = Try(sys.env("CI_COMMIT_REF_NAME")).toOption
-val nexusDeployUsername = Try(sys.env("NEXUS_DEPLOY_USERNAME")).toOption
-val nexusDeployPassword = Try(sys.env("NEXUS_DEPLOY_PASSWORD")).toOption
-val slfVersion = "1.7.25"
-
-def getVersionSuffix: String = {
-	gitBranch match {
-		case Some("master") => ""
-		case _ => "-SNAPSHOT"
-	}
-}
-
 lazy val bintraySettings = Seq(
-//	bintrayOrganization in ThisBuild := Some("anchormen"),
-//	bintrayReleaseOnPublish in ThisBuild := false
+	bintrayOrganization in ThisBuild := Some("anchormen"),
+	bintrayReleaseOnPublish in ThisBuild := false
 )
 
 lazy val commonDependencies = Seq(
-	libraryDependencies += "org.slf4j" % "slf4j-api" % slfVersion,
 	libraryDependencies += "org.web3j" % "codegen" % "3.2.0"
 )
 
@@ -42,48 +27,11 @@ lazy val pluginSettings = Seq(
 	licenses += ("MIT", url("https://opensource.org/licenses/MIT")),
 	organization := "nl.anchormen.sbt",
 	sbtPlugin := true,
-	version := s"0.1$getVersionSuffix"
-)
-
-lazy val publicationSettings = Seq(
-	publishTo := {
-		val nexus = "http://nexus.anchormen.local:8081/repository"
-
-		if (version.value.endsWith("SNAPSHOT"))
-			Some("snapshots" at nexus + "/maven-snapshots")
-		else
-			Some("releases"  at nexus + "/maven-releases")
-	},
-	publishMavenStyle := true,
-	publishArtifact in Test := false,
-	credentials += Credentials("Sonatype Nexus Repository Manager",
-		"nexus.anchormen.local",
-		nexusDeployUsername.getOrElse(""),
-		nexusDeployPassword.getOrElse(""))
-)
-
-lazy val repoSettings = Seq(
-	resolvers += Resolver.typesafeRepo("releases")
-)
-
-lazy val sbtSettings = Seq(
-//	crossSbtVersions := Seq("0.13.17", "1.1.1")
-//	sbtVersion := "1.1.1"
-//	sbtVersion in Global := "1.1.1"
+	version := "0.1"
 )
 
 lazy val scalaSettings = Seq(
-	crossScalaVersions	:= Seq("2.11.11"),
-	scalaVersion := "2.11.11"
-//	scalaCompilerBridgeSource := {
-//		val sv = appConfiguration.value.provider.id.version
-//		("org.scala-sbt" % "compiler-interface" % sv % "component").sources
-//	}
-//	scalaVersion := (CrossVersion partialVersion (sbtVersion in pluginCrossBuild).value match {
-//		case Some((0, 13)) => "2.11.11"
-//		case Some((1, _))  => "2.12.4"
-//		case _             => sys error s"Unhandled sbt version ${(sbtVersion in pluginCrossBuild).value}"
-//	})
+	scalaVersion := "2.12.4"
 )
 
 lazy val testSettings = Seq(
@@ -99,8 +47,5 @@ lazy val plugin = project
 		.settings(commonDependencies)
 		.settings(javaSettings)
 		.settings(pluginSettings)
-		.settings(publicationSettings)
-		.settings(repoSettings)
-		.settings(sbtSettings)
 		.settings(scalaSettings)
 		.settings(testSettings)
