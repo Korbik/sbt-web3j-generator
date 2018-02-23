@@ -1,10 +1,22 @@
+import scala.util.Try
+
 name := "sbt-web3j-generator"
 
+val gitBranch = Try(sys.env("CI_COMMIT_REF_NAME")).toOption
+val nexusDeployUsername = Try(sys.env("NEXUS_DEPLOY_USERNAME")).toOption
+val nexusDeployPassword = Try(sys.env("NEXUS_DEPLOY_PASSWORD")).toOption
 val slfVersion = "1.7.25"
 
+def getVersionSuffix: String = {
+	gitBranch match {
+		case Some("master") => ""
+		case _ => "-SNAPSHOT"
+	}
+}
+
 lazy val bintraySettings = Seq(
-	bintrayOrganization in ThisBuild := Some("anchormen"),
-	bintrayReleaseOnPublish in ThisBuild := false
+//	bintrayOrganization in ThisBuild := Some("anchormen"),
+//	bintrayReleaseOnPublish in ThisBuild := false
 )
 
 lazy val commonDependencies = Seq(
@@ -30,11 +42,24 @@ lazy val pluginSettings = Seq(
 	licenses += ("MIT", url("https://opensource.org/licenses/MIT")),
 	organization := "nl.anchormen.sbt",
 	sbtPlugin := true,
-	version := "0.1"
+	version := s"0.1$getVersionSuffix"
 )
 
 lazy val publicationSettings = Seq(
-	publishMavenStyle := false
+	publishTo := {
+		val nexus = "http://nexus.anchormen.local:8081/repository"
+
+		if (version.value.endsWith("SNAPSHOT"))
+			Some("snapshots" at nexus + "/maven-snapshots")
+		else
+			Some("releases"  at nexus + "/maven-releases")
+	},
+	publishMavenStyle := true,
+	publishArtifact in Test := false,
+	credentials += Credentials("Sonatype Nexus Repository Manager",
+		"nexus.anchormen.local",
+		nexusDeployUsername.getOrElse(""),
+		nexusDeployPassword.getOrElse(""))
 )
 
 lazy val repoSettings = Seq(

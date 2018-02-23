@@ -25,7 +25,7 @@ object Web3JGeneratorPlugin extends AutoPlugin {
 		web3JUseJavaNativeTypes := true
 	)
 
-	override lazy val projectSettings = inConfig(Compile)(
+	override lazy val projectSettings: Seq[Setting[_]] = inConfig(Compile)(
 		sourceGenerators in Compile += Def.task {
 			lazy val sources = generateWrapper.value
 			streams.value.log.info("Generated sources:\r\n" + sources.mkString("\r\n"))
