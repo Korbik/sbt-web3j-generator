@@ -68,13 +68,13 @@ lazy val repoSettings = Seq(
 
 lazy val sbtSettings = Seq(
 //	crossSbtVersions := Seq("0.13.17", "1.1.1")
-	sbtVersion := "1.1.1"
+//	sbtVersion := "1.1.1"
 //	sbtVersion in Global := "1.1.1"
 )
 
 lazy val scalaSettings = Seq(
+	crossScalaVersions	:= Seq("2.12.4"),
 	scalaVersion := "2.12.4"
-//	crossScalaVersions := Seq("2.11.11", "2.12.4"),
 //	scalaCompilerBridgeSource := {
 //		val sv = appConfiguration.value.provider.id.version
 //		("org.scala-sbt" % "compiler-interface" % sv % "component").sources
