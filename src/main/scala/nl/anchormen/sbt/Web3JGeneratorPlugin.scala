@@ -1,6 +1,8 @@
 package nl.anchormen.sbt
 
+import java.io.IOException
 import java.nio.charset.StandardCharsets
+import java.nio.file.Path
 
 import org.web3j.codegen.SolidityFunctionWrapper
 import sbt.Keys._
@@ -60,14 +62,14 @@ private object Generate {
 	  * @param outputDir The directory to output the generated classes to
 	  * @return
 	  */
-	def process(contractFiles: List[AbiBin], useJavaNativeTypes: Boolean, outputDir: File): Seq[File] = {
+	private def process(contractFiles: List[AbiBin], useJavaNativeTypes: Boolean, outputDir: File): Seq[File] = {
 		val generator = new SolidityFunctionWrapper(useJavaNativeTypes)
 
 		val files: Seq[Option[File]] = for (contract <- contractFiles) yield {
-			val bin = new String(java.nio.file.Files.readAllBytes(contract.bin), StandardCharsets.UTF_8)
-			val abi = new String(java.nio.file.Files.readAllBytes(contract.abi), StandardCharsets.UTF_8)
-
 			try {
+				val bin = readFile(contract.bin)
+				val abi = readFile(contract.abi)
+
 				generator.generateJavaFiles(
 					contract.name,
 					bin,
@@ -78,12 +80,17 @@ private object Generate {
 
 				Some(contract.newLocation(outputDir))
 			} catch {
-				case e: Exception =>
+				case e @ (_ : IOException | _ : ClassNotFoundException) =>
 					println(e.getMessage)
 					None
 			}
 		}
 
 		files.flatten[File]
+	}
+
+	@throws(classOf[IOException])
+	private def readFile(path: Path): String = {
+		new String(java.nio.file.Files.readAllBytes(path), StandardCharsets.UTF_8)
 	}
 }
