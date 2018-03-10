@@ -1,8 +1,9 @@
 name := "sbt-web3j-generator"
 
 lazy val bintraySettings = Seq(
+	bintrayRepository in ThisBuild := "sbt-plugins",
 	bintrayOrganization in ThisBuild := Some("anchormen"),
-	bintrayReleaseOnPublish in ThisBuild := false
+	bintrayReleaseOnPublish in ThisBuild := false,
 )
 
 lazy val commonDependencies = Seq(
@@ -26,8 +27,9 @@ lazy val pluginSettings = Seq(
 	conflictManager := ConflictManager.latestRevision,
 	licenses += ("MIT", url("https://opensource.org/licenses/MIT")),
 	organization := "nl.anchormen.sbt",
+	publishMavenStyle := false,
 	sbtPlugin := true,
-	version := "0.1"
+	version := "0.1.1"
 )
 
 lazy val scalaSettings = Seq(
