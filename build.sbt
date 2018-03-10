@@ -29,7 +29,7 @@ lazy val pluginSettings = Seq(
 	organization := "nl.anchormen.sbt",
 	publishMavenStyle := false,
 	sbtPlugin := true,
-	version := "0.1"
+	version := "0.1.1"
 )
 
 lazy val scalaSettings = Seq(
