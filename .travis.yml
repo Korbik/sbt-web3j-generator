@@ -24,6 +24,8 @@ cache:
         - "$HOME/.sbt"
         - "$HOME/.ivy2"
 deploy:
+    on:
+        all_branches: true
     dry-run: true
     provider: bintray
     key:
