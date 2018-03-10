@@ -15,9 +15,9 @@ scala:
 jdk:
     - oraclejdk8
 before_install:
-    - sudo gem install rubygems-update
-    - sudo update_rubygems
-    - sudo gem update --system
+    - gem install rubygems-update
+    - update_rubygems
+    - gem update --system
 cache:
     directories:
         - "$HOME/.m2/repository"
