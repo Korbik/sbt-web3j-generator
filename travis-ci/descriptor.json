@@ -10,7 +10,8 @@
 	},
 	"files":
 	[
-		{"includePattern": "target/(.*)/(.*\\.jar)", "uploadPattern": "/$2"}
+		{"includePattern": "target/(.*)/(.*\\.jar)", "uploadPattern": "/$1/$2"},
+		{"includePattern": "target/(.*)/(ivy\\-.*\\.xml)", "uploadPattern": "/$1/$2"}
 	],
 	"matrixParams": {
 		"override": 1
