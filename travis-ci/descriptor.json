@@ -5,11 +5,12 @@
 		"subject": "anchormen"
 	},
 	"version": {
-		"name": "0.1.2"
+		"name": "0.1.2",
+		"vcs_tag": "0.1.2"
 	},
 	"files":
 	[
-		{"includePattern": "target/(.*)/*(.jar)", "uploadPattern": "/$2"}
+		{"includePattern": "target/(.*)/*(.jar)", "uploadPattern": "/$1"}
 	],
 	"publish": false
 }
