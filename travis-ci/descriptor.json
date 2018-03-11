@@ -10,8 +10,8 @@
 	},
 	"files":
 	[
-		{"includePattern": "target/(.*)/(ivy\-.*\.xml)", "uploadPattern": "/$1/$2"},
-		{"includePattern": "target/(.*)/(.*\.jar)", "uploadPattern": "/$1/$2"}
+		{"includePattern": "target/(.*)/(ivy\-.*\.xml)", "uploadPattern": "nl.anchormen.sbt/sbt-web3j-generator/$1/$2"},
+		{"includePattern": "target/(.*)/(.*\.jar)", "uploadPattern": "nl.anchormen.sbt/sbt-web3j-generator/$1/$2"}
 	],
 	"matrixParams": {
 		"override": 1
