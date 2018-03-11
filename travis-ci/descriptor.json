@@ -1,0 +1,15 @@
+{
+	"package": {
+		"name": "sbt-web3j-generator",
+		"repo": "sbt-plugins",
+		"subject": "anchormen"
+	},
+	"version": {
+		"name": "0.1.2"
+	},
+	"files":
+	[
+		{"includePattern": "target/(.*)", "uploadPattern": "/$1"}
+	],
+	"publish": true
+}
