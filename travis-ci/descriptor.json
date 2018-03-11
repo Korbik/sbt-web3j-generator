@@ -9,7 +9,7 @@
 	},
 	"files":
 	[
-		{"includePattern": "target/(.jar)", "uploadPattern": "/$1"}
+		{"includePattern": "target/(.*)*/(.*\\.jar)", "uploadPattern": "/$2"}
 	],
-	"publish": true
+	"publish": false
 }
