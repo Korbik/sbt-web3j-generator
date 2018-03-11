@@ -10,7 +10,7 @@
 	},
 	"files":
 	[
-		{"includePattern": "target/(.*)/*(.jar)", "uploadPattern": "/$1"}
+		{"includePattern": "target/(.*.jar)", "uploadPattern": "/$1"}
 	],
 	"publish": false
 }
