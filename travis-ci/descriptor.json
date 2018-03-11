@@ -10,7 +10,10 @@
 	},
 	"files":
 	[
-		{"includePattern": "target/(.*)", "uploadPattern": "/$1"}
+		{"includePattern": "target/scala-2.12/ivy-0.1.2.xml", "uploadPattern": "/nl.anchormen.sbt/sbt-web3j-generator/scala_2.12/sbt_1.0/0.1.2/ivys/ivy.xml"},
+		{"includePattern": "target/scala-2.12/sbt-web3j-generator-0.1.2.jar", "uploadPattern": "/nl.anchormen.sbt/sbt-web3j-generator/scala_2.12/sbt_1.0/0.1.2/jars/sbt-web3j-generator.jar"},
+		{"includePattern": "target/scala-2.12/sbt-web3j-generator-0.1.2-sources.jar", "uploadPattern": "/nl.anchormen.sbt/sbt-web3j-generator/scala_2.12/sbt_1.0/0.1.2/srcs/sbt-web3j-generator-sources.jar"},
+		{"includePattern": "target/scala-2.12/sbt-web3j-generator-0.1.2-javadoc.jar", "uploadPattern": "/nl.anchormen.sbt/sbt-web3j-generator/scala_2.12/sbt_1.0/0.1.2/docs/sbt-web3j-generator-javadoc.jar"}
 	],
 	"matrixParams": {
 		"override": 1

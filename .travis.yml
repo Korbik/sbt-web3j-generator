@@ -9,7 +9,7 @@ cache:
         - "$HOME/.sbt"
         - "$HOME/.ivy2"
 deploy:
-    dry-run: false
+    dry-run: true
     file: "travis-ci/descriptor.json"
     provider: bintray
     key:
