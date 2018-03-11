@@ -9,7 +9,7 @@ cache:
         - "$HOME/.sbt"
         - "$HOME/.ivy2"
 jobs:
-  include:
-    - stage: deploy
-      install: skip # bundle install is not required
-      script: "sbt ++$TRAVIS_SCALA_VERSION publish"
+    include:
+        - stage: deploy
+          install: skip # bundle install is not required
+          script: "sbt ++$TRAVIS_SCALA_VERSION publish"
