@@ -1,0 +1,27 @@
+{
+	"package": {
+		"licenses": ["MIT"],
+		"name": "sbt-web3j-generator",
+		"repo": "sbt-plugins",
+		"subject": "anchormen",
+		"user": "llee",
+		"vcs_url": "https://github.com/Anchormen/sbt-web3j-generator.git"
+	},
+	"version": {
+		"attributes": [],
+		"desc": "Version 0.1.2",
+		"gpgSign": false,
+		"name": "0.1.2",
+		"released": "2018-03-13",
+		"vcs_tag": "0.1.2"
+	},
+	"files":
+	[
+		{"includePattern": "target/(.*)/(ivy\-.*\.xml)", "uploadPattern": "/nl.anchormen.sbt/sbt-web3j-generator/$1/$2"},
+		{"includePattern": "target/(.*)/(.*\.jar)", "uploadPattern": "/nl.anchormen.sbt/sbt-web3j-generator/$1/$2"}
+	],
+	"matrixParams": {
+		"override": 1
+	},
+	"publish": false
+}
