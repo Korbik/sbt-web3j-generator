@@ -3,7 +3,7 @@
 
 # Usage
 
-`addSbtPlugin("nl.anchormen.sbt" %% "sbt-web3j-generator" % "0.1")`
+`addSbtPlugin("nl.anchormen.sbt" %% "sbt-web3j-generator" % "0.1.3")`
 
 # Dependencies
 
