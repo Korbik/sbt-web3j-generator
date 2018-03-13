@@ -9,9 +9,9 @@ cache:
         - "$HOME/.sbt"
         - "$HOME/.ivy2"
 deploy:
-    file: "travis-ci/descriptor.json"
+    file: travis-ci/descriptor.json
     provider: bintray
     key:
-        secure: CSKDE8sH87LiE2ByyB6N0M5pgFWk2gv3V+NVsqAVh+LG6W304IFLkVpQYf7ZjSLXRopHsVnfefI4STvHtvVLrK89fuNo3XAfvdCK6YJMtoVMLiI4476eAxJuVd9elt9JqsYk5cqBwZNmKVLkXxoWVSem1NHuZg8jC1yYpxuPWbv7DwNd+CmAI6KJJWu1lquSxYvcJ6/P+QXPRvwA785CAMQOk4dWyliAyRcfOMgEU6HNRrFIjhMz4iWtZS5JlErR2syul6Jdchrpd3776faQoXV+bw3m0o1aL+j4m/H3BDOgM2yMzsMkCvqkt+4U2h66mHXycSuZSvMYSVWRq7A/ixkH8vaWVluE9XjmQ1spKjzIRIHM9B6fZ6Gxf5eQiA+JlIXCokDFwxHEPZQKMYpsss0Iw8fy7KgPC5Fp3e28jPllyv51pCUDOwJ160AH6Vswbh3y3KmdQoP/hwdHIunKxEZHvPw29hGYN6dffPEwkj1okM/Vkgzl1Iv7UwFhqbw9KdcYWCrYZBT2ByEFjgG/u2PVmUu3Gd8n1nBoI4vWxpVGhDnFvJXxhCCgTXAvCmvYkd00SyUGO4VEAnIjheA7xHNSppAFH0bjo+wQPcvI4DWS4HMiIFKBkOTL3kp6mKqV2nYTcCLXqdQemWrZLgZ+675vnARsnOnTSoMVeXcILAU=
+        secure: 5EbIt0qdkIFD6zYiOQi/6MfSDDcqRPoJ4rDdo+yHGlc9bIa+BFHn7AyoI4aDGoxAA8zKoLIFKjHGdduodPF4EoSlU8VkCbs64NxhAIzIKczFC9oJdnpBEjLBdBjYFOyKa74QqAr3+93D33LKvHiljaIYj917zen3w2WGrorwU8KhSgZaIYNwtNaHlM+eb0LbIB9icB7AATew1l8VOeHrewL813cv+/bUfqMmmqoF2Svoqoirvxm4sxhKqloIUdNoH7hFObKBChmWAesI1H/Ond+A8JmhKKrQ4B4jc295QY+PX8kguZcIPOqKah9WejJBLsXy0jCoJxhbbgPTkBOeu5/kickWOIJEoqko8Z5jNJRKwkoHTvHlzF/qRNa11S5LbiTE7ymc2p/kVkcvqd7G7bo6Coobdb9OQCcKroT51eiIyRxwpltvHf5rQucT5B8yC9/gbgVQLLeq6LXy2bZwjrmNsk28GNJnrf3gY9ruGrLpwoEcFm/q82tTq1JSySqNBdbrnRDuYb7ku534iQstlXD+l3o1xSFdT8IsfCYLWKekiMserfsyXMoZheHljZk9WXy+E0IIj7crzPaq7NRU+G8h94bJ1fRimgKmF77QXnWz3BvkjeqX9ABNpo6VD7PIWE24nHq06Nb7xZHVmuETSr6UvylRDD7gGsyG9mCbqxA=
     on:
         all_branches: true

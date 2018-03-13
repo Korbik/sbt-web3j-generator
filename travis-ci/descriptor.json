@@ -3,7 +3,8 @@
 		"licenses": ["MIT"],
 		"name": "sbt-web3j-generator",
 		"repo": "sbt-plugins",
-		"subject": "llee",
+		"subject": "anchormen",
+		"user": "llee",
 		"vcs_url": "https://github.com/Anchormen/sbt-web3j-generator.git"
 	},
 	"version": {
