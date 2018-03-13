@@ -8,9 +8,10 @@ cache:
         - "$HOME/.m2/repository"
         - "$HOME/.sbt"
         - "$HOME/.ivy2"
-deploy:
-    file: travis-ci/descriptor.json
-    provider: bintray
-    key: 0b189a6348a342a4a226dd0b94281ec7367581a4
-    on:
-        all_branches: true
+jobs:
+    include:
+        - stage: deploy
+          branches:
+            only: master
+          install: skip
+          script: "sbt ++$TRAVIS_SCALA_VERSION publish"
