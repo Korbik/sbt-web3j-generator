@@ -11,7 +11,6 @@ cache:
 jobs:
     include:
         - stage: deploy
-          branches:
-            only: master
+          if: branch = master
           install: skip
           script: "sbt ++$TRAVIS_SCALA_VERSION publish"
