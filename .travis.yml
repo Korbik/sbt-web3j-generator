@@ -10,6 +10,7 @@ cache:
         - "$HOME/.ivy2"
 jobs:
     include:
+        - stage: test
         - stage: deploy
           if: branch = master
           install: skip
