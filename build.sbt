@@ -7,7 +7,7 @@ lazy val bintraySettings = Seq(
 )
 
 lazy val commonDependencies = Seq(
-	libraryDependencies += "org.web3j" % "codegen" % "3.5.0"
+	libraryDependencies += "org.web3j" % "codegen" % "3.6.0"
 )
 
 lazy val javaSettings = Seq(
@@ -33,7 +33,7 @@ lazy val pluginSettings = Seq(
 )
 
 lazy val scalaSettings = Seq(
-	scalaVersion := "2.12.4"
+	scalaVersion := "2.12.7"
 )
 
 lazy val testSettings = Seq(
